@@ -1,5 +1,9 @@
 # Build your own Bluesky bot 🦋
 
+#### Credits
+
+[Phil Nash](https://github.com/philnash/bsky-bot): 
+
 This is a template repo for building [Bluesky](https://bsky.app/) bots that post on their own schedule. It uses [TypeScript](https://www.typescriptlang.org/) to build the bot and [GitHub Actions](https://docs.github.com/en/actions) to schedule the posts.
 
 * [How to use](#how-to-use)
