@@ -1,6 +1,11 @@
 # Build your own Bluesky mirror bot 🦋
 
-This is a template repo for building a [Bluesky](https://bsky.app/) bot that mirrors a Twitter/X account by pulling from existing [sports mirror bots on Mastodon](sportsbots.xyz) as a work around for paying to access Twitter's API.
+This is a template repo for building a [Bluesky](https://bsky.app/) bot that mirrors an X/Twitter account by pulling from existing [sports mirror bots on Mastodon](sportsbots.xyz) as a work around for lack of access Twitter's API.
+
+## Table of Contents
+* Credits
+* Instructions
+* FAQ
 
 ## Credits
 * [Phil Nash](https://github.com/philnash) for providing the code for building a bot that posts on its own schedule. [Phil Nash's Bluesky bot template](https://github.com/philnash/bsky-bot)
@@ -13,7 +18,7 @@ Below, I outline the places in each file where you will need to add something sp
 
 ### / .github / workflow/ post.yml
 
-#### Line 4
+#### <ins>Line 4</ins>
 `- cron: "* * * */12 *`
 
 **Purpose:** This line tells the bot how often to run.
