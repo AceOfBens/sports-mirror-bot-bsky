@@ -93,7 +93,7 @@ To work around this, I change this setting to a lower number (ex. if the post I 
 
 **Purpose:** If the bot has trouble pulling a card from the source post and buffers for too long, this is the image it will post in place of the card.
 
-**What to change:** Currently, there is an image file with the Phillies logo on it in this setting. I have yet to see the bot post this photo, but just in case your bot does, change this photo to avoid embarrassment.
+**What to change:** Currently, there is an image file with the Philadelphia Flyers logo on it in this setting. I have yet to see the bot post this photo, but just in case your bot does, change this photo to avoid embarrassment.
 
 #### 🔷 Line 218 (optional/if needed)
 `var postNum = 20`
@@ -114,6 +114,8 @@ To work around this, I change this setting to a lower number (ex. if the post I 
 Set the Application name as whatever will help you remember this is the access token you're using for your Bluesky mirror bot. The scopes I allowed on mine are `read:accounts`, `read:statuses`, and `profile`.
 
 It will then give you your access token which will look like 40+ characters of keyboard smashing, and you will copy and paste that where it says `paste_access_token_here` in Line 2. Make sure to keep the apostrophes around it.
+
+If you have your repository set to public, this may be another thing you keep secret, in which case, you would put `${{ secrets.ACCESS_TOKEN }}` in place of the access token and follow the same steps you did to [set up the login info](https://github.com/AceOfBens/sports-mirror-bot-bsky/blob/main/README.md#-lines-21-22).
 
 #### 🔷 Line 25
 `var nhlflyersReg = new RegExp("@nhlflyers@sportsbots.xyz", "g");`
