@@ -16,9 +16,9 @@ This is a template repo for building a [Bluesky](https://bsky.app/) bot that mir
 
 Below, I outline the places in each file where you will need to add something specific to the code to connect it to the mirror account you have set up on Bluesky and pull from the correct Mastodon account, as well as a few features that do not need to be changed to operate but are helpful to know about in case you want to change the settings. Not all file need to edited, and, in fact, most of them should not be touched unless you are a developer who knows what you are doing!
 
-### / .github / workflow/ post.yml
+### [/ .github / workflow / post.yml](.github/workflow/post.yml)
 
-#### <ins>Line 4</ins>
+#### $${\color{#81b812}Line 4}$$
 `- cron: "* * * */12 *`
 
 **Purpose:** This line tells the bot how often to run.
@@ -52,7 +52,7 @@ BSKY_PASSWORD: ${{ secrets.BSKY_PASSWORD }}
 For **Name**, type in `BSKY_HANDLE` or `BSKY_PASSWORD`
 For **Secret**, type in the handle (ex. @notphillies.bsky.social) or the password (can be the password you set up on Bluesky or an app password).
 
-### / src / lib / bot.ts
+### [/ src / lib / bot.ts](src/lib/bot.ts)
 
 #### Line 29
 `dryRun: true,`
@@ -102,7 +102,7 @@ To work around this, I change this setting to a lower number (ex. if the post I 
 
 **What <ins>can</ins> change:** Same as for Line 83, this can be edited if you're trying something out. Personally, I haven't found a need to change Line 218 yet, but I wanted to point it out in case it's useful.
 
-### / src / lib / getPostText.ts
+### [/ src / lib / getPostText.ts](src/lib/getPostText.ts)
 
 #### Line 2
 ``
