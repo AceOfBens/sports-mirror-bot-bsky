@@ -18,7 +18,7 @@ Below, I outline the places in each file where you will need to add something sp
 
 ### [/ .github / workflow / post.yml](.github/workflow/post.yml)
 
-#### $${\color{#81b812}Line 4}$$
+#### 🔷 Line 4
 `- cron: "* * * */12 *`
 
 **Purpose:** This line tells the bot how often to run.
@@ -29,7 +29,7 @@ Whatever you set is what Github will use as a guideline, but from experience, I 
 
 If the bot is slow to catch up, you can go to the Actions tab, select the most recent workflow (Post to Bluesky), and re-run all jobs to push the bot to run again, if you so wish.
 
-#### Lines 14-15
+#### 🔷 Lines 14-15
 ```
 - run: npm install axios
 - run: npm install tsl-mastodon-api
@@ -39,7 +39,7 @@ If the bot is slow to catch up, you can go to the Actions tab, select the most r
 
 **What to change:** After the bot runs the first time, these two lines can be removed as they do not need to be installed on every workflow.
 
-#### Lines 21-22
+#### 🔷 Lines 21-22
 ```
 BSKY_HANDLE: ${{ secrets.BSKY_HANDLE }}
 BSKY_PASSWORD: ${{ secrets.BSKY_PASSWORD }}
@@ -54,7 +54,7 @@ For **Secret**, type in the handle (ex. @notphillies.bsky.social) or the passwor
 
 ### [/ src / lib / bot.ts](src/lib/bot.ts)
 
-#### Line 29
+#### 🔷 Line 29
 `dryRun: true,`
 
 **Purpose:** Toggle whether the bot is in test mode.
@@ -63,7 +63,7 @@ For **Secret**, type in the handle (ex. @notphillies.bsky.social) or the passwor
 
 This can be toggled on and off (`false` or `true`, respectively) for any reason in the future, such as if you are editing the code and want to avoid the possibility of the bot automatically running before you've fixed the bug or changed whatever settings you're trying to update.
 
-#### Line 83 (optional/if needed)
+#### 🔷 Line 83 (optional/if needed)
 `var postNum = 20;`
 
 **Purpose:** Tells the bot how many posts to check on the Mastodon account when checking for updates.
@@ -74,28 +74,28 @@ For example, I add settings for the bot to substitute players' X/Twitter handles
 
 To work around this, I change this setting to a lower number (ex. if the post I don't want it to double post is the third most recent, I will change this setting to 2). Then, the next day, I will change it back to 20. Keep in mind that if the account you're mirroring posts frequently, setting this number too low will potentially result in missed posts.
 
-#### Line 84
+#### 🔷 Line 84
 `var bskyFeedAwait = await this.userAgent.app.bsky.feed.getAuthorFeed({actor: "CHANGETHIS.bsky.social", limit: postNum,});`
 
 **Purpose:** Tells the bot which Bluesky account's feed to compare the posts from the specified Mastodon account to.
 
 **What to change:** Put the Bluesky handle of the account you have set up for your mirror bot (ex. notphillies.bsky.social) in place of `CHANGETHIS.bsky.social`.
 
-#### Line 149 (Change if/when Bluesky updates their video length limit from 3 minutes)
+#### 🔷 Line 149 (Change if/when Bluesky updates their video length limit from 3 minutes)
 `if (urls[0].slice(-3) == "mp4" && parseFloat(alts[0].split("@#*")[2]) < 180 && limits.canUpload == true)`
 
 **Purpose:** Gonna be so real with y'all, I (Ben Ace) am not entirely sure what the purpose of the line is, but it has something to do with the time limits on Bluesky videos.
 
 **What to change:** When Bluesky updated their limits on video from 1 minute to 3 minutes, I noticed that the bots were still pulling the thumbnail of videos longer than a minute and adding a note in the alt text that the video exceeds Bluesky's limits. After digging around the code for a bit, I noticed that where it currently says `180` in the line above, it had said `60`. So, if Bluesky increases the time limit on videos again, update this line with the new time limit in number of seconds.
 
-#### Line 175
+#### 🔷 Line 175
 `cardResponse = await axios.get("https://a.vsstatic.com/mobile/app/mlb/logos/app/philadelphia-phillies-app-2.jpg", { responseType: 'arraybuffer'});`
 
 **Purpose:** If the bot has trouble pulling a card from the source post and buffers for too long, this is the image it will post in place of the card.
 
 **What to change:** Currently, there is an image file with the Flyers logo on it in this setting. I have yet to see the bot post this photo, but just in case your bot does, change this photo to avoid embarrassment.
 
-#### Line 218 (optional/if needed)
+#### 🔷 Line 218 (optional/if needed)
 `var postNum = 20`
 
 **Purpose:** Tells the bot how many posts to check on the Bluesky account when checking for updates.
@@ -104,26 +104,50 @@ To work around this, I change this setting to a lower number (ex. if the post I 
 
 ### [/ src / lib / getPostText.ts](src/lib/getPostText.ts)
 
-#### Line 2
-``
+#### 🔷 Line 2
+`const mastodon = new Mastodon.API({access_token: 'paste_access_token_here', api_url: 'https://mastodon.social/api/v1/'});`
 
-**Purpose:**
+**Purpose:** Allows the bot to access Mastodon's API. In other words, it allows the bot to view posts on Mastodon.
 
-**What to change:**
+**What to change:** To obtain an access token, first create an account on [Mastodon](https://mastodon.social/). Then go to Settings > Development > New application.
 
-#### 
-``
+Set the Application name as whatever will help you remember this is the access token you're using for your Bluesky mirror bot. The scopes I allowed on mine are `read:accounts`, `read:statuses`, and `profile`.
 
-**Purpose:**
+It will then give you your access token which will look like 40+ characters of keyboard smashing, and you will copy and paste that where it says `paste_access_token_here` in Line 2. Make sure to keep the apostrophes around it.
 
-**What to change:**
+#### 🔷 Line 25
+`var nhlflyersReg = new RegExp("@nhlflyers@sportsbots.xyz", "g");`
 
-#### 
-``
+**Purpose:** Replace the handle of the Mastodon account the bot is mirroring with the handle of the Bluesky bot.
 
-**Purpose:**
+**What to change:** Rename the regex `nhlflyerReg` to anything you want in the format of `nameReg`, then replace `@nhlflyers@sportsbots.xyz` with the Mastodon handle your bot is mirroring. It is likely the same as a the X/Twitter handle with "@sportsbots.xyz" at the end.
 
-**What to change:**
+#### 🔷 Line 87
+`contentString = contentString.replace(nhlflyersReg, "notflyers.bsky.social");`
+
+**Purpose:** Tell the bot what to replace the text specified by `nhlflyersReg` with
+
+**What to change:** After editing Line 25, go to Line 87. Replace `nhlflyersReg` with whatever you renamed your regex in Line 25. Replace `notflyers.bsky.social` with the handle of your Bluesky mirror bot account.
+
+#### 🔷 Line 28 (Optional)
+`var nbcsphillyReg = new RegExp("@nbcsphilly", "g");`
+
+**Purpose:** Tell the bot to look for this term/hashtag/handle/other text in the posts it pulls from Mastodon.
+
+**What to change:** This is an example I left in for if you want the bot to change X/Twitter handles that it commonly tags to the person's or organization's name. For example,I have these set up for all the players' usernames for the Phillies and Flyers mirror bots. (See: [Phillies mirror bot code](https://github.com/AceOfBens/notphillies-bsky/blob/main/src/lib/getPostText.ts) [Lines 27-53 and 120-146], [Flyers mirror bot code](https://github.com/AceOfBens/notflyers-bsky/blob/main/src/lib/getPostText.ts) [Lines 25-60 and 123-156]).
+
+In this specific example, I've replaced NBC Sports Philadelphia's X/Twitter handle with NBCSP because the Flyers will tag the TV station and radio station where you can tune into the game at the beginning of all 3 periods. Bluesky users will still get the message if I didn't add this text substitution, but to ensure the text of the Bluesky posts remain accessible (especially since users can't click on the tagged username and go to a profile to see what is tagged), I've included it.
+
+**To create your own**, the only two things you want to change from this example are:
+`nbcsphillyReg` - This names the regex and connects it to the next step. It really doesn't matter what you name it, but it helps you remember why you added it.
+`@nbcsphilly` - You'll need to change the first term in the parentheses to whatever text you want replaced. Make sure you keep quotation marks around this text.
+
+#### 🔷 Line 89 (Optional, but necessary if you did the previous step)
+`contentString = contentString.replace(nbcsphillyReg, "NBCSP");`
+
+**Purpose:** Tells the bot what to replace the text from the source post with.
+
+**What to change:** You'll need to replace both terms in the parentheses in the format of (exampleReg, "Text you wish to replace whatever's in the source post"). Everything else in this line stays the same.
 
 ### No Change Needed
 
@@ -147,9 +171,11 @@ The following files in this bot **do not** need to be edited to run properly, an
 
 ## FAQ
 
-### Does this cost anything?
+### Does this cost anything to make?
 
-Generally, no. The purpose of pulling from a Mastodon mirror bot instead of directly from the X/Twitter account is because accessing X/Twitter's API is a hassle for several reasons. So, that part of it costs nothing. However, depending on how many bots you have running through your Github account and how often you schedule them to run, you may hit the monthly limit
+Generally, no. The purpose of pulling from a Mastodon mirror bot instead of directly from the X/Twitter account is because accessing X/Twitter's API is a hassle for several reasons. So, that part of it costs nothing.
+
+However, depending on how many bots you have running through your Github account and how often you schedule them to run, you may hit [Github Actions' monthly limit](https://docs.github.com/en/billing/managing-billing-for-your-products/managing-billing-for-github-actions/about-billing-for-github-actions). Most workflows for this are billed as 1 minute, meaning each time one of these bots run, it counts toward 1 minute of the 2,000 minutes per month you're allowed on a free account. Currently I'm paying the $4/month for Github Pro to run @notflyers.bsky.social and @notphillies.bsky.social because I can spare a few bucks a month and I feel it's a worthwhile project. If you're looking to make keep a free account, this may factor into how many bots you set up and [how often you schedule the bot to run](https://github.com/AceOfBens/sports-mirror-bot-bsky/blob/main/README.md#-github--workflow--postyml).
 
 ### I've noticed that [@notflyers.bsky.social](https://bsky.app/profile/notflyers.bsky.social/) often links to a YouTube video from the Philadelphia Flyers' channel. Why isn't my bot doing that?
 
