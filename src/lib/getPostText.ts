@@ -1,5 +1,5 @@
 import * as Mastodon from 'tsl-mastodon-api';
-const mastodon = new Mastodon.API({access_token: 'DlRovob5ujTMeOFQFeWARurfj-oy8Hv_auRCOBmFXhk', api_url: 'https://mastodon.social/api/v1/'}); // access the Mastodon API using the access token.
+const mastodon = new Mastodon.API({access_token: 'paste_access_token_here', api_url: 'https://mastodon.social/api/v1/'}); // access the Mastodon API using the access token.
 
 /*
 	getPostText():
@@ -12,7 +12,9 @@ const mastodon = new Mastodon.API({access_token: 'DlRovob5ujTMeOFQFeWARurfj-oy8H
 */
 export default async function getPostText() 
 {
-	const limitVal = 15; // The number of posts to get from Mastodon.
+	const limitVal = 20; // The number of posts to get from Mastodon.
+	
+	// Regex list to address formatting discrepancies between Mastodon posts and Bluesky posts
 	var pReg = new RegExp("</p><p>", "g"); // A regex to deal with <p></p>. This should create a new section in the text, which we do via 2 line breaks.
 	var brReg = new RegExp("<br>", "g"); // A regex to deal with <br>. This should go to the next line, which we do via a line break. 
 	var quoteReg = new RegExp(`\\\\"`, "g"); // A regex to deal with \". This should be replaced with a " value with no \.
@@ -21,9 +23,9 @@ export default async function getPostText()
 	var twitterReg = new RegExp("@twitter.com", "g"); // A regex to deal with @twitter.com. Should be deleted.
 	var sportsBotsReg = new RegExp("@sportsbots.xyz", "g");
 	var nhlflyersReg = new RegExp("@nhlflyers@sportsbots.xyz", "g"); // A regex to deal with Flyers's @. Should be replaced with the bot's @.
-	var nbcsphillyReg = new RegExp("@nbcsphilly", "g");
 	var tagReg = new RegExp("<(:?[^>]+)>", "g"); // A general regex for HTML. Used to get the plaintext value of the mastodon post without tag notation.
 	var invalidLinkReg = new RegExp("\\S*(\\.com|\\.ca|\\.org|\\.net)\\S*(…|\\.\\.\\.)", "g");
+	var nbcsphillyReg = new RegExp("@nbcsphilly", "g"); // Regex example for a substitution within the post text. Can be helpful for if you want to replace an X/Twitter handle with the user's name
 
 	var awaitTweet = await mastodon.getStatuses("109705347039296818", {'limit':limitVal}); //Use the Mastodon API to get a specified number of recent posts from the Mastodon API.
 	var string = JSON.stringify(awaitTweet); // Convert the post into a JSON string.
@@ -75,7 +77,17 @@ export default async function getPostText()
 		var contentJSON = objJSON[i]["content"]; // Filter through all the values of the JSON object, to get just the content of post i. 
 		var contentString = JSON.stringify(contentJSON); // Convert the content of the post into a JSON string.
 		contentString = contentString.slice(1,-1); // Remove the quotation marks.
-		contentString = contentString.replace(twitterReg, "").replace(nhlflyersReg, "notflyers.bsky.social").replace(sportsBotsReg, "").replace(logoReg, "").replace(quoteReg, `"`).replace(andReg, "&").replace(pReg, "\n\n").replace(brReg, "\n").replace(tagReg, "").replace(nbcsphillyReg, "nbcsportsphiladelphia.com"); //Use the ", &, <p>, and <br> regexes to apply appropriate formatting. Then use the general regex to remove the HTML formatting from the mastodon post. 
+		contentString = contentString.replace(pReg, "\n\n");
+		contentString = contentString.replace(brReg, "\n");
+		contentString = contentString.replace(quoteReg, `"`);
+		contentString = contentString.replace(andReg, "&"); //Use the ", &, <p>, and <br> regexes to apply appropriate formatting. Then use the general regex to remove the HTML formatting from the mastodon post.
+		contentString = contentString.replace(logoReg, "");
+		contentString = contentString.replace(twitterReg, "");
+		contentString = contentString.replace(sportsBotsReg, "");
+		contentString = contentString.replace(nhlflyersReg, "notflyers.bsky.social");
+		contentString = contentString.replace(tagReg, "");
+		contentString = contentString.replace(nbcsphillyReg, "NBCSP");
+		
 
 		if (contentString.includes("RT ") || contentString.includes("Retweet ") || contentString.includes("retweet ") || contentString.includes("RETWEET "))
 		{
