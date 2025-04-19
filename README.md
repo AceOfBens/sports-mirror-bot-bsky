@@ -58,7 +58,7 @@ For **Secret**, type in the handle (ex. @notphillies.bsky.social) or the passwor
 
 This can be toggled on and off (`false` or `true`, respectively) for any reason in the future, such as if you are editing the code and want to avoid the possibility of the bot automatically running before you've fixed the bug or changed whatever settings you're trying to update.
 
-#### Line 83 (optional)
+#### Line 83 (optional/if needed)
 `var postNum = 20;`
 
 **Purpose:** Tells the bot how many posts to check on the Mastodon account when checking for updates.
@@ -69,7 +69,42 @@ For example, I add settings for the bot to substitute players' X/Twitter handles
 
 To work around this, I change this setting to a lower number (ex. if the post I don't want it to double post is the third most recent, I will change this setting to 2). Then, the next day, I will change it back to 20. Keep in mind that if the account you're mirroring posts frequently, setting this number too low will potentially result in missed posts.
 
-### / src / lib / config.ts
+#### Line 84
+`var bskyFeedAwait = await this.userAgent.app.bsky.feed.getAuthorFeed({actor: "CHANGETHIS.bsky.social", limit: postNum,});`
+
+**Purpose:** Tells the bot which Bluesky account's feed to compare the posts from the specified Mastodon account to.
+
+**What to change:** Put the Bluesky handle of the account you have set up for your mirror bot (ex. notphillies.bsky.social) in place of `CHANGETHIS.bsky.social`.
+
+#### Line 149 (Change if/when Bluesky updates their video length limit from 3 minutes)
+`if (urls[0].slice(-3) == "mp4" && parseFloat(alts[0].split("@#*")[2]) < 180 && limits.canUpload == true)`
+
+**Purpose:** Gonna be so real with y'all, I (Ben Ace) am not entirely sure what the purpose of the line is, but it has something to do with the time limits on Bluesky videos.
+
+**What to change:** When Bluesky updated their limits on video from 1 minute to 3 minutes, I noticed that the bots were still pulling the thumbnail of videos longer than a minute and adding a note in the alt text that the video exceeds Bluesky's limits. After digging around the code for a bit, I noticed that where it currently says `180` in the line above, it had said `60`. So, if Bluesky increases the time limit on videos again, update this line with the new time limit in number of seconds.
+
+#### Line 175
+`cardResponse = await axios.get("https://a.vsstatic.com/mobile/app/mlb/logos/app/philadelphia-phillies-app-2.jpg", { responseType: 'arraybuffer'});`
+
+**Purpose:** If the bot has trouble pulling a card from the source post and buffers for too long, this is the image it will post in place of the card.
+
+**What to change:** Currently, there is an image file with the Flyers logo on it in this setting. I have yet to see the bot post this photo, but just in case your bot does, change this photo to avoid embarrassment.
+
+#### Line 218 (optional/if needed)
+`var postNum = 20`
+
+**Purpose:** Tells the bot how many posts to check on the Bluesky account when checking for updates.
+
+**What <ins>can</ins> change:** Same as for Line 83, this can be edited if you're trying something out. Personally, I haven't found a need to change Line 218 yet, but I wanted to point it out in case it's useful.
+
+### / src / lib / getPostText.ts
+
+#### Line 2
+``
+
+**Purpose:**
+
+**What to change:**
 
 #### 
 ``
@@ -77,8 +112,6 @@ To work around this, I change this setting to a lower number (ex. if the post I 
 **Purpose:**
 
 **What to change:**
-
-### / src / lib / getPostText.ts
 
 #### 
 ``
@@ -92,6 +125,7 @@ To work around this, I change this setting to a lower number (ex. if the post I 
 The following files in this bot **do not** need to be edited to run properly, and unless you are well versed in Typescript, it is highly recommended that you do not change anything in them.
 
 * / src / index.ts
+* / src / lib / config.ts
 * / .env.example
 * / .gitignore
 * / .nvmrc
